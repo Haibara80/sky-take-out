@@ -48,7 +48,9 @@ public class EmployeeController {
         log.info("员工登录：{}", employeeLoginDTO);
 
         Employee employee = employeeService.login(employeeLoginDTO);
-
+        if(employee.getStatus()==0){
+            return Result.error("账号已被禁用");
+        }
         //登录成功后，生成jwt令牌
         Map<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.EMP_ID, employee.getId());
@@ -96,5 +98,13 @@ public class EmployeeController {
         log.info("员工分页查询：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.getPage(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation("修改员工状态")
+    public Result setStatus(@PathVariable Integer status, Long id) {
+        log.info("修改员工状态：{},{}", status, id);
+        employeeService.update(status, id);
+        return Result.success();
     }
 }

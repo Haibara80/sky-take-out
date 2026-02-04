@@ -91,4 +91,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         return pageResult;
     }
 
+    public void update(Integer status, Long id) {
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+        //不用employee的话下次更新别的字段又要写不同的逻辑
+        //后期只要涉及修改的操作，都可以复用这个方法
+        employeeMapper.update(employee);
+    }
 }
